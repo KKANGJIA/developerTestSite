@@ -1,83 +1,64 @@
-"use strict"
+const btn = document.querySelector('.start_btn');
+const main = document.querySelector('#main');
+const qna = document.querySelector('#qna');
+let qnaBox = document.querySelector('.qnaBox');
+let answerBox = document.querySelector('.answerBox');
+const status = document.querySelector('.status');
 
-// 하나를 누를때마다 프로그래스바가 움직이고 다음 문항으로 넘어간다
-// 프로그래스바가 꽉 차면 결과 화면으로 이동한다
+let idx = 0;
 
-const a = document.querySelector('.a');
-const b = document.querySelector('.b');
-const c = document.querySelector('.c');
-const questionsSection = document.querySelectorAll('.questionsSection');
-const answers = document.querySelectorAll('.answer');
-const lis = document.querySelectorAll('li');
-const ul = document.querySelectorAll('ul');
-const questionAnswer = document.querySelector('.questionAnswer');
-const question = document.querySelector('.question');
-const bar = document.querySelector('.progress_bar');
-const choice_section = document.querySelector('.choice_section');
+btn.addEventListener('click', clickStartBtn);
 
-changeNextQnA();
+function clickStartBtn() {
+    main.style.display='none';
+    qna.style.display='block';
 
-function changeNextQnA(){
-    answers.forEach(answer => {
-        answer.addEventListener('click', function (){
-            questionAnswer.removeChild(question);
-            questionAnswer.removeChild(a);
-            questionAnswer.removeChild(b);
-            questionAnswer.removeChild(c);
-
-            setTimeout(function (){
-                const proBar = document.createElement("div");
-                proBar.id = 'progress_bar'
-                proBar.style.position = 'absolute';
-                proBar.style.width = '100px';
-                proBar.style.height = '30px';
-                proBar.style.backgroundColor = 'black';
-                proBar.style.borderRadius = '10px 0px 0px 10px';
-                bar.appendChild(proBar);
-            },500 );
-
-        });
-    });
+    goNext(idx);
+    idx++; // 답 선택하면 다음 질문으로 넘어가기
 }
-createQnA();
 
-function createQnA(){
-    const sp0 = document.createElement("li");
-    sp0.id = "newQ";
-    const sp0_content = document.createTextNode("2. 연인이랑 싸웠을 때 어떻게 할래?");
-    sp0.appendChild(sp0_content)
-    questionAnswer.appendChild(sp0);
+function goNext(idx) {
+    for(let i=0; i <= 10; i++){
+        qnaBox.innerHTML = qnaList[idx].q    
+    }
+    addAnswer(idx);
+    qnaBox.style.backgroundColor = "#fff";
+    qnaBox.style.borderRadius = '10px';
+    qnaBox.style.fontSize = '1.5em';
+
+    excuteStatusBar();
+}
+
+
+function excuteStatusBar(){
+    const answer = document.querySelector('.answer');
+    answer.addEventListener('click', () => {
+        setTimeout(() => {
+            const status_bar = document.createElement('div');
+            status_bar.style.backgroundColor = "red";
+            status_bar.style.width = "10%";
+        },100);
+    });
+        
+}
+
+function addAnswer(idx) {
+    for(let j=0; j <= 2; j++){
+        createAnswerBtn(idx);
+    }
+
     
+}
 
-   const sp1 = document.createElement("li");
-    sp1.id = "newA";
-    const sp1_content = document.createTextNode("a. 연락할래. 사과해야지...");
-    sp1.appendChild(sp1_content)
-    questionAnswer.appendChild(sp1);
-
-
-    const sp2 = document.createElement("li");
-    sp2.id = "newA";
-    const sp2_content = document.createTextNode("b. 연락안해! 내가 뭘 잘 못했어?");
-    sp2.appendChild(sp2_content)
-    questionAnswer.appendChild(sp2);
-
-    const sp3 = document.createElement("li");
-    sp3.id = "newA";
-    const sp3_content = document.createTextNode("c. 난 잘 모르겠어...");
-    sp3.appendChild(sp3_content)
-    questionAnswer.appendChild(sp3);
-
-    
-    const sp4 = document.createElement("button");
-    sp4.setAttribute.classList = "start_btn";
-    const sp4_content = document.createTextNode("결과보기");
-    const a = document.createElement("a");
-    a.href = 'result.html';
-    a.appendChild(sp4_content);
-    sp4.appendChild(a);
-    choice_section.appendChild(sp4);
-};
-
-
-
+function createAnswerBtn(idx) {
+    const answerBtn = document.createElement('button');
+    answerBtn.textContent = qnaList[idx].a[idx].answer;
+    answerBtn.setAttribute('class', 'answer');
+    answerBox.appendChild(answerBtn);
+    answerBtn.style.backgroundColor = '#fff';
+    answerBtn.style.border = 'none';
+    answerBtn.style.borderRadius = '10px';
+    answerBtn.style.fontSize = '1.5em';
+    answerBtn.style.marginTop = '10px';
+    answerBtn.style.padding = '18px';
+}
